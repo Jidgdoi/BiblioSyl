@@ -32,8 +32,8 @@ class PrincipalFrame(wx.Frame):
 		# --- Définition des paths des différents dossiers ---
 		self.pathSrc = pathSrc
 		self.pathIcone = self.pathSrc + "icones" + self.OS
-		self.pathLibrary = "/home/cfournier/Documents/Perso/BiblioSyl/data/LibTest.lsc"
-		self.pathCouv = "/home/cfournier/Documents/Perso/BiblioSyl/data/LibTest_book_cover/"
+		self.pathLibrary = "/home/cfournier/Documents/Perso/BiblioSyl/data/Example_library.lsc"
+		self.pathCouv = "/home/cfournier/Documents/Perso/BiblioSyl/data/Example_library_book_cover/"
 		
 		# --- Vérification de la présence des dossiers ---
 #		for myDir in [self.pathData, self.pathCouv, self.pathLivre]:

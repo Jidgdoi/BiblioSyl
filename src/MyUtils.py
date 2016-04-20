@@ -3,6 +3,7 @@
 # C. Fournier, 2014
 
 import wx
+import operator
 
 #########################################################################
 
@@ -13,7 +14,7 @@ import wx
 DEFAULTCOVER = "image-not-available.jpg"
 DEFAULTWINDOWSIZE = (1574, 850)
 DEFAULTWINDOWPOSITION = wx.DEFAULT_FRAME_STYLE
-DEFAULTLIBRARYPATH = ""
+DEFAULTLIBRARYPATH = "data/Example_library.lsc"
 
 #########################################################################
 
@@ -39,6 +40,41 @@ def is_number(x):
 		return True
 	except ValueError:
 		return False
+
+def tryNumber(x, revealNature=False):
+	"""
+	Return True if x is a number (int or float), else return False.
+	'revealNature': if True, return the variable in his correct form instead of a boolean.
+	(e.g: "42" -> 42
+	      "0.74" -> 0.74
+	      "foo" -> "foo")
+	"""
+	isNumber = True
+	if not operator.isNumberType(x):
+		# type(x) != int or float
+		try:
+			x = int(x)
+		except ValueError:
+			try:
+				x = float(x)
+			except ValueError:
+				isNumber = False
+	if revealNature:
+		return x
+	return isNumber
+
+def dictAdd(d, key, value):
+	"""
+	Add the item 'key:value' to the dictionary 'd' if the key doesn't exist, otherwise it updates the key by appending the new value to the previous one.
+	e.g.: d = {'a':5}
+	    dictAdd(d, 'a', 7) --> d = {'a':[5,7]}
+	    dictAdd(d, 'b', 42) --> d = {'a':5, 'b':42}
+	"""
+	if d.has_key(key):
+		if type(d[key]) != list: d[key] = [d[key], value]
+		else:                    d[key].append(value)
+	else:
+		d[key] = value
 
 def setMiddle(win, item):
 	"""
@@ -95,10 +131,10 @@ def readKeyValueFile(fileName, sep='\t', reverse=False):
 			if l[0] != "#":
 				if reverse: values, key = l.strip().split("\t")
 				else:       key, values = l.strip().split("\t")
-				v = [ MTB.tryNumber(i, revealNature=True) for i in values.split(',') ]
+				v = [ tryNumber(i, revealNature=True) for i in values.split(',') ]
 				if len(v) == 1: v = v[0]
-				MTB.dictAdd(dResult, key, v)
-	return res
+				dictAdd(dResult, key, v)
+	return dResult
 
 def writeKeyValueFile(fileName, data, sep='\t', reverse=False):
 	"""
@@ -108,7 +144,6 @@ def writeKeyValueFile(fileName, data, sep='\t', reverse=False):
 	'sep': separator. Default is tabulation.
 	'reverse': in case of the structure of the file is "Value\tKey".
 	"""
-	dResult = {}
 	f = open(fileName, 'w')
 	for key,v in data.items():
 		key = str(key)

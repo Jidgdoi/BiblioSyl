@@ -49,7 +49,7 @@ if __name__ == '__main__':
 	print "PLATFORM",wx.Platform
 	print sys.argv[0]
 	print os.path.realpath(sys.argv[0])
-	sys.exit(0)
+#	sys.exit(0)
 	pathSrc = os.path.dirname(os.path.realpath(sys.argv[0])) + os.sep
 	app = wx.PySimpleApp()
 	user = getpass.getuser()

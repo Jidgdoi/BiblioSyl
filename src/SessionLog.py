@@ -17,7 +17,7 @@ class SessionLog():
 		self.dParam = {}
 		self.sessionLogFile = "%s%ssession.log" %(srcPath, os.sep)
 		if os.path.isfile(self.sessionLogFile):
-			self.readSessionLog()
+			self.readSessionLog(self.sessionLogFile)
 		else:
 			self.__initSessionLogFile()
 
@@ -26,32 +26,29 @@ class SessionLog():
 		self.dParam["principalFramePosition"] = DEFAULTWINDOWPOSITION
 		self.dParam["libraryPath"] = DEFAULTLIBRARYPATH
 		
-		self.writeSessionLog()
+		self.writeSessionLog(self.sessionLogFile, self.dParam)
 
-	def updateSessionLog(self, wSize="", wPostion="", libPath="", dico={}):
-		if dico:
-			self.dParam.update(dico)
-		elif wSize and wPosition and libPath:
-			self.dParam["principalFrameSize"] = wSize
-			self.dParam["principalFramePosition"] = wPostion
-			self.dParam["libraryPath"] = libPath
+	def updateSessionLog(self, dParameters):
+		self.dParam.update(dParameters)
 
 	# ----------------------------------
 	# --- All write and read functions
 	# ----------------------------------
 
-	def readSessionLog(self):
-		dParam = readKeyValueFile(self.sessionLogFile)
-		self.updateSessionLog(dParam)
+	def readSessionLog(self, logFile):
+		print "readSession: %s" %self.sessionLogFile
+		dParameters = readKeyValueFile(logFile)
+		self.dParam.update(dParameters)
 
-	def writeSessionLog(self):
-		writeKeyValueFile(self.sessionLogFile, self.dParam)
+	def writeSessionLog(self, logFile, dParameters):
+		writeKeyValueFile(logFile, dParameters)
 
 	# ----------------------------------
 	# --- All 'get' functions
 	# ----------------------------------
 
 	def getSize(self):
+		print self.dParam
 		return self.dParam["principalFrameSize"]
 
 	def getPosition(self):
